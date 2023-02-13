@@ -1,0 +1,15 @@
+<form action="/backendCompare" method="get">
+  <button type="submit">Submit</button>
+</form> 
+
+
+<ul class="brands">
+  <li *ngFor="let brand of brands">
+    <p class="name">{{ brand.name }}</p>
+    <p class="name">{{ brand.totalProfiles }}</p>
+    <p class="name">{{ brand.totalFans }}</p>
+    <p class="name">{{ brand.totalEngagement }}</p>
+
+  </li>
+</ul>
+
