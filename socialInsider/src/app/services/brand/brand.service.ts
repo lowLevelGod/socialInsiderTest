@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Brand, BrandsResult, DateSocial } from 'src/app/brand';
+import { Brand, BrandFinal, BrandsResult, DateSocial } from 'src/app/brand';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -13,12 +13,10 @@ export class BrandService {
 
   constructor(private http: HttpClient) { }
 
-  getBrands() {
-    var result = this.http.get<BrandsResult>(this.backendUrl);
+  getBrands(d: Date) {
+    var result = this.http.post<BrandFinal[]>(this.backendUrl, {date: new Date(d).getTime()});
 
-    return result.pipe(
-      map(brands => brands.result)
-      );
+    return result;
   }
 
   getProfileData(id: string, date: DateSocial, profile_type: string) {

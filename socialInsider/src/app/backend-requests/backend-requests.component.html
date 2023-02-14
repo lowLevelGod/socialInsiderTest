@@ -1,15 +1,27 @@
 <form action="/backendCompare" method="get">
   <button type="submit">Submit</button>
-</form> 
+</form>
+
+<table>
+  <tr>
+    <th>Brand Name</th>
+    <th>Total Profiles</th>
+    <th>Total Fans</th>
+    <th>Total Engagement</th>
+  </tr>
+  <tr *ngFor="let brand of brands">
+    <td>{{ brand.name }}</td>
+    <td>{{ brand.totalProfiles }}</td>
+    <td>{{ brand.totalFans }}</td>
+    <td>{{ brand.totalEngagement }}</td>
+  </tr>
+</table>
 
 
-<ul class="brands">
-  <li *ngFor="let brand of brands">
-    <p class="name">{{ brand.name }}</p>
-    <p class="name">{{ brand.totalProfiles }}</p>
-    <p class="name">{{ brand.totalFans }}</p>
-    <p class="name">{{ brand.totalEngagement }}</p>
-
-  </li>
-</ul>
-
+<mat-form-field appearance="fill">
+  <mat-label>Choose a date</mat-label>
+  <input matInput [matDatepicker]="picker" (dateChange) = "chooseDate()" [(ngModel)] = "calendarDate">
+  <mat-hint>MM/DD/YYYY</mat-hint>
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
