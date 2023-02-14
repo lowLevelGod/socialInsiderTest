@@ -1,8 +1,8 @@
 import { Component, NgIterable, OnInit } from '@angular/core';
 import { Brand, BrandFinal, BrandsResult, DateSocial } from '../brand';
 import { BrandService } from '../services/brand/brand.service';
-import { Observable, firstValueFrom } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { Observable, firstValueFrom, merge } from 'rxjs';
+import { concatMap, map, switchMap, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-backend-requests',
@@ -48,41 +48,75 @@ export class BackendRequestsComponent implements OnInit {
 
   }
 
-   getBrands() {
+   async getBrands() {
     this.brandService.getBrands()
-      .subscribe(brands => {
+      .pipe(
+        switchMap(brands => {
+          const res = brands.map(b => {
+            const stats = b.profiles.map(p => {
+              const d = {
+                start: new Date(p.profile_added).getTime(),
+                end: Infinity,
+                timezone: "Europe/London"
+              };
+              return this.getProfileData(p.id, d, p.profile_type)
+            })
 
-        brands.forEach(b => {
+            console.log(stats);
+            const brand = {
+                    name: b.brandname,
+                    totalProfiles: b.profiles.length,
+                    stats: stats
+                  };
+              return brand;
+          })
 
-          var totalEngagement = 0;
-          var totalFans = 0;
+          return res;
+        })
+      )
+      .subscribe(data =>{
+        data.stats.forEach(x => {
+          this.brands.push({
+            name: data.name,
+            totalProfiles: data.totalProfiles,
+            totalEngagement: 0,
+            totalFans: 0
+          })
+        })
+      })
+      // .subscribe(brands => {
 
-          b.profiles.forEach(async p => {
-            const d = {
-              start: new Date(p.profile_added).getTime(),
-              end: Infinity,
-              timezone: "Europe/London"
-            };
-            const stats = await firstValueFrom(this.getProfileData(p.id, d, p.profile_type));
+      //   brands.forEach(b => {
 
-            totalEngagement += stats.totalEngagement;
-            totalFans += stats.totalFans;
-          });
+      //     var totalEngagement = 0;
+      //     var totalFans = 0;
 
-          const brand = {
-            name: b.brandname,
-            totalProfiles: b.profiles.length,
-            totalEngagement: totalEngagement,
-            totalFans: totalFans
-          };
+      //     b.profiles.forEach(async p => {
+      //       const d = {
+      //         start: new Date(p.profile_added).getTime(),
+      //         end: Infinity,
+      //         timezone: "Europe/London"
+      //       };
+      //       const stats = await firstValueFrom(this.getProfileData(p.id, d, p.profile_type));
 
-          this.brands.push(brand);
+      //       totalEngagement += stats.totalEngagement;
+      //       totalFans += stats.totalFans;
+      //     });
 
-        });
+      //     const brand = {
+      //       name: b.brandname,
+      //       totalProfiles: b.profiles.length,
+      //       totalEngagement: totalEngagement,
+      //       totalFans: totalFans
+      //     };
 
-      }
+      //     this.brands.push(brand);
 
-      );
+      //   });
+
+      // }
+
+      // );
   }
 
   ngOnInit(): void {
