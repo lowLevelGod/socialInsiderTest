@@ -1,8 +1,6 @@
-import { Component, NgIterable, OnInit } from '@angular/core';
-import { Brand, BrandFinal, BrandsResult, DateSocial } from '../brand';
+import { Component, OnInit } from '@angular/core';
+import { BrandFinal } from '../brand';
 import { BrandService } from '../services/brand/brand.service';
-import { Observable, firstValueFrom, merge } from 'rxjs';
-import { concatMap, map, switchMap, take } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
