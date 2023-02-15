@@ -121,7 +121,7 @@ function processProfile(p, arg) {
             for (let i = 0; i < dates.length; ++i) {
               const idx = dates[i];
               totalEngagement += arr[idx].engagement ? arr[idx].engagement : 0;
-              // totalFans += arr[idx].fans;
+              totalFans += arr[idx].followers ? arr[idx].followers : 0;
             }
 
             const res = {
