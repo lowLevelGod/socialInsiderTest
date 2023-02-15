@@ -49,7 +49,7 @@ function getProfileData(id, profile_type, date) {
           for (let i = 0; i < dates.length; ++i) {
             const idx = dates[i];
             totalEngagement += arr[idx].engagement;
-            // totalFans += arr[idx].fans;
+            totalFans += arr[idx].followers ? arr[idx].followers : 0;
           }
 
           const res = {
