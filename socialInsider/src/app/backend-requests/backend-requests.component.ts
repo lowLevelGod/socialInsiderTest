@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BrandFinal } from '../brand';
 import { BrandService } from '../services/brand/brand.service';
-import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-backend-requests',
@@ -11,25 +10,21 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class BackendRequestsComponent implements OnInit {
 
   brands!: BrandFinal[];
-  myGroup!: FormGroup;
   calendarDate: Date = new Date(Date.now());
 
   constructor(private brandService: BrandService) { }
 
-  getBrands(){
-    // console.log(this.calendarDate);
+  getBrands() {
     this.brandService.getBrands(this.calendarDate)
-    .subscribe(b => this.brands = b);
+      .subscribe(b => this.brands = b);
   }
 
-  chooseDate(){
-    this.ngOnInit();
+  chooseDate() {
+    //refresh component with new data from api
+    this.ngOnInit(); 
   }
 
   ngOnInit(): void {
     this.getBrands();
-    this.myGroup = new FormGroup({
-      firstName: new FormControl()
-  });
   }
 }
