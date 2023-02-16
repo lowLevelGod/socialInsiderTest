@@ -1,14 +1,11 @@
-const http = require("http");
 
 const axios = require("axios");
 const app = require("express")();
 const bodyParser = require("body-parser");
-const { resolve } = require("path");
 const jsonParser = bodyParser.json();
 
 
 function processProfile(p, arg) {
-  return new Promise((resolve) => {
 
     const date = {
       // start: new Date(p.profile_added).getTime(),
@@ -44,12 +41,9 @@ function processProfile(p, arg) {
       },
     };
 
-    axios
+    return axios
       .post("https://app.socialinsider.io/api", data, config)
       .then((resApi) => {
-        return new Promise((resolve) => {
-    
-
           const result = resApi.data.resp;
           if (result) {
             const keys = Object.keys(result);
@@ -70,34 +64,28 @@ function processProfile(p, arg) {
               totalFans: totalFans,
             };
          
-            resolve(res);
+            return res;
           } else {
             const res = {
               totalEngagement: 0,
               totalFans: 0,
             };
     
-            resolve(res);
+            return res;
           }
-        });
+   
       })
       .catch((err) => {
         // console.log(err);
       })
-      .then(a => {
-        resolve(a);
-      });
-      
-  });
 }
 
 function processBrand(brand, arg) {
-  return new Promise((resolve) => {
     const profiles = brand.profiles;
 
     const stats = Promise.all(profiles.map(processProfile, {start: this.start}));
    
-    stats.then((s) => {
+    return stats.then((s) => {
 
       var totalEngagement = 0;
       var totalFans = 0;
@@ -112,9 +100,8 @@ function processBrand(brand, arg) {
         totalEngagement: totalEngagement,
         totalFans: totalFans,
       };
-      resolve(b);
+      return b;
     });
-  });
 }
 
 app.post("/", jsonParser, (req, res) => {
